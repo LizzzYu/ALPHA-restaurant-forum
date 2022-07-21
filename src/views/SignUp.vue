@@ -1,12 +1,8 @@
 <template>
   <div class="container py-5">
-    <form
-      class="w-100"
-      @submit.prevent.stop="handleSubmit">
+    <form class="w-100" @submit.prevent.stop="handleSubmit">
       <div class="text-center mb-4">
-        <h1 class="h3 mb-3 font-weight-normal">
-          Sign Up
-        </h1>
+        <h1 class="h3 mb-3 font-weight-normal">Sign Up</h1>
       </div>
 
       <div class="form-label-group mb-2">
@@ -19,9 +15,9 @@
           class="form-control"
           placeholder="name"
           autocomplete="username"
-          required
           autofocus
-        >
+          required
+        />
       </div>
 
       <div class="form-label-group mb-2">
@@ -35,7 +31,7 @@
           placeholder="email"
           autocomplete="email"
           required
-        >
+        />
       </div>
 
       <div class="form-label-group mb-3">
@@ -49,7 +45,7 @@
           placeholder="Password"
           autocomplete="new-password"
           required
-        >
+        />
       </div>
 
       <div class="form-label-group mb-3">
@@ -63,32 +59,27 @@
           placeholder="Password"
           autocomplete="new-password"
           required
-        >
+        />
       </div>
 
-      <button
-        class="btn btn-lg btn-primary btn-block mb-3"
-        type="submit"
-      >
+      <button class="btn btn-lg btn-primary btn-block mb-3" type="submit">
         Submit
       </button>
 
       <div class="text-center mb-3">
         <p>
-          <router-link to="/signin">
-            Sign In
-          </router-link>
+          <router-link to="/signin"> Sign In </router-link>
         </p>
       </div>
 
-      <p class="mt-5 mb-3 text-muted text-center">
-        &copy; 2017-2018
-      </p>
+      <p class="mt-5 mb-3 text-muted text-center">&copy; 2017-2018</p>
     </form>
   </div>
 </template>
 
 <script>
+import authorizationAPI from '../apis/authorization';
+import { Toast } from '../utils/helpers';
 export default {
   data() {
     return {
@@ -96,19 +87,60 @@ export default {
       email: '',
       password: '',
       passwordCheck: '',
-    }
+    };
   },
   methods: {
-    handleSubmit() {
-      const data = JSON.stringify({
-        name: this.name,
-        email: this.email,
-        password: this.password,
-        passwordCheck: this.passwordCheck
-      })
+    async handleSubmit() {
+      try {
+        const formKeys = ['name', 'email', 'password', 'passwordCheck'];
+        // const keys = Object.keys(this).filter(el => !el.includes('_') && !el.includes('$'))
+        let errorField = [];
 
-      console.log({data})
-    }
-  }
-}
+        formKeys.forEach(key => {
+          if (!this[key]) errorField.push(key)
+        })
+
+        if (
+          !this.name ||
+          !this.email ||
+          !this.password ||
+          !this.passwordCheck
+        ) {
+          Toast.fire({
+            icon: 'error',
+            title: `請填入 ${errorField.join(', ')}`,
+          });
+
+          return;
+        }
+
+        const formData = {
+          name: this.name,
+          email: this.email,
+          password: this.password,
+          passwordCheck: this.passwordCheck,
+        };
+
+        const { data } = await authorizationAPI.signUp(formData);
+
+        if (data.status === 'success') {
+          Toast.fire({
+            icon: 'success',
+            title: data.message,
+          });
+        } else {
+          Toast.fire({
+            icon: 'error',
+            title: data.message,
+          });
+        }
+      } catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: '無法註冊，請稍後再試',
+        });
+      }
+    },
+  },
+};
 </script>

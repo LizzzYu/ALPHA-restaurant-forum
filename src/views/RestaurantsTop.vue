@@ -55,182 +55,10 @@
 </template>
 
 <script>
+import restaurantAPI from '../apis/restaurants';
+import usersAPI from '../apis/users';
+import { Toast } from '../utils/helpers';
 import NavTabs from '../components/NavTabs.vue';
-
-const dummyData = {
-  restaurants: [
-    {
-      id: 50,
-      name: 'Mossie Bartoletti',
-      tel: '(392) 036-9035',
-      address: '805 Casper Harbor',
-      opening_hours: '08:00',
-      description: 'Ut molestias excepturi magni et consequatur.',
-      image:
-        'https://loremflickr.com/320/240/restaurant,food/?random=16.563720368747315',
-      viewCounts: 0,
-      createdAt: '2022-07-05T22:26:19.000Z',
-      updatedAt: '2022-07-05T22:26:19.000Z',
-      CategoryId: 5,
-      FavoritedUsers: [],
-      isFavorited: false,
-      FavoriteCount: 0,
-    },
-    {
-      id: 49,
-      name: 'Nikolas Schuster',
-      tel: '060.512.5232 x374',
-      address: '9835 Royal Camp',
-      opening_hours: '08:00',
-      description: 'Et sit eius aut quo expedita. Fugiat expedita volu',
-      image:
-        'https://loremflickr.com/320/240/restaurant,food/?random=32.81392081379772',
-      viewCounts: 0,
-      createdAt: '2022-07-05T22:26:19.000Z',
-      updatedAt: '2022-07-05T22:26:19.000Z',
-      CategoryId: 5,
-      FavoritedUsers: [],
-      isFavorited: false,
-      FavoriteCount: 0,
-    },
-    {
-      id: 48,
-      name: 'Emmalee Dickinson',
-      tel: '1-576-548-0668 x43021',
-      address: '39939 Katelyn Squares',
-      opening_hours: '08:00',
-      description: 'Qui recusandae cupiditate et ut voluptates et. Eni',
-      image:
-        'https://loremflickr.com/320/240/restaurant,food/?random=5.4245529688122796',
-      viewCounts: 0,
-      createdAt: '2022-07-05T22:26:19.000Z',
-      updatedAt: '2022-07-05T22:26:19.000Z',
-      CategoryId: 3,
-      FavoritedUsers: [],
-      isFavorited: false,
-      FavoriteCount: 0,
-    },
-    {
-      id: 47,
-      name: 'Jerrold Metz',
-      tel: '908.229.7303 x79812',
-      address: '436 Callie Causeway',
-      opening_hours: '08:00',
-      description: 'Iste voluptatum aut consequatur pariatur reiciendi',
-      image:
-        'https://loremflickr.com/320/240/restaurant,food/?random=15.828155682682322',
-      viewCounts: 0,
-      createdAt: '2022-07-05T22:26:19.000Z',
-      updatedAt: '2022-07-05T22:26:19.000Z',
-      CategoryId: 2,
-      FavoritedUsers: [],
-      isFavorited: false,
-      FavoriteCount: 0,
-    },
-    {
-      id: 46,
-      name: 'Kamren Brown',
-      tel: '(467) 271-7341 x2849',
-      address: '372 Doyle Orchard',
-      opening_hours: '08:00',
-      description: 'Nobis cupiditate veritatis.',
-      image:
-        'https://loremflickr.com/320/240/restaurant,food/?random=81.22291896392373',
-      viewCounts: 0,
-      createdAt: '2022-07-05T22:26:19.000Z',
-      updatedAt: '2022-07-05T22:26:19.000Z',
-      CategoryId: 1,
-      FavoritedUsers: [],
-      isFavorited: false,
-      FavoriteCount: 0,
-    },
-    {
-      id: 45,
-      name: 'Roselyn McLaughlin',
-      tel: '(479) 706-9055 x91343',
-      address: '82057 Ettie Throughway',
-      opening_hours: '08:00',
-      description: 'Porro explicabo quae exercitationem sit laudantium',
-      image:
-        'https://loremflickr.com/320/240/restaurant,food/?random=12.401057286026184',
-      viewCounts: 0,
-      createdAt: '2022-07-05T22:26:19.000Z',
-      updatedAt: '2022-07-05T22:26:19.000Z',
-      CategoryId: 3,
-      FavoritedUsers: [],
-      isFavorited: false,
-      FavoriteCount: 0,
-    },
-    {
-      id: 44,
-      name: 'Joy Lowe',
-      tel: '1-248-034-2606 x975',
-      address: '354 Dashawn Cove',
-      opening_hours: '08:00',
-      description: 'Voluptate unde qui nulla. Quidem rerum quasi ratio',
-      image:
-        'https://loremflickr.com/320/240/restaurant,food/?random=15.304819817476112',
-      viewCounts: 0,
-      createdAt: '2022-07-05T22:26:19.000Z',
-      updatedAt: '2022-07-05T22:26:19.000Z',
-      CategoryId: 1,
-      FavoritedUsers: [],
-      isFavorited: false,
-      FavoriteCount: 0,
-    },
-    {
-      id: 43,
-      name: 'Bernard Casper DDS',
-      tel: '1-267-747-6873 x6348',
-      address: '0268 Dickinson Falls',
-      opening_hours: '08:00',
-      description: 'repudiandae',
-      image:
-        'https://loremflickr.com/320/240/restaurant,food/?random=87.07205981616009',
-      viewCounts: 0,
-      createdAt: '2022-07-05T22:26:19.000Z',
-      updatedAt: '2022-07-05T22:26:19.000Z',
-      CategoryId: 4,
-      FavoritedUsers: [],
-      isFavorited: false,
-      FavoriteCount: 0,
-    },
-    {
-      id: 42,
-      name: 'Maiya Flatley',
-      tel: '1-973-769-0247 x08896',
-      address: '097 Kihn Skyway',
-      opening_hours: '08:00',
-      description: 'eum necessitatibus ea',
-      image:
-        'https://loremflickr.com/320/240/restaurant,food/?random=68.67917708511362',
-      viewCounts: 0,
-      createdAt: '2022-07-05T22:26:19.000Z',
-      updatedAt: '2022-07-05T22:26:19.000Z',
-      CategoryId: 4,
-      FavoritedUsers: [],
-      isFavorited: false,
-      FavoriteCount: 0,
-    },
-    {
-      id: 41,
-      name: 'Aubrey Zieme',
-      tel: '(736) 562-0634 x81294',
-      address: '642 Maiya Locks',
-      opening_hours: '08:00',
-      description: 'eos fugit corrupti',
-      image:
-        'https://loremflickr.com/320/240/restaurant,food/?random=22.589822335431077',
-      viewCounts: 0,
-      createdAt: '2022-07-05T22:26:19.000Z',
-      updatedAt: '2022-07-05T22:26:19.000Z',
-      CategoryId: 3,
-      FavoritedUsers: [],
-      isFavorited: false,
-      FavoriteCount: 0,
-    },
-  ],
-};
 
 export default {
   name: 'RestaurantsTop',
@@ -246,33 +74,69 @@ export default {
     };
   },
   methods: {
-    fetchRestaurantsTop() {
-      this.restaurants = dummyData.restaurants;
+    async fetchRestaurantsTop() {
+      try {
+        const response = await restaurantAPI.getRestaurantTop();
+        const { data } = response;
+        this.restaurants = data.restaurants;
+      } catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: '無法取得人氣餐廳，請稍後再試',
+        });
+      }
     },
-    addFavorite(id) {
-      this.restaurants = this.restaurants.map((restaurant) => {
-        if (restaurant.id !== id) {
-          return restaurant;
-        }
-        return {
-          ...restaurant,
-          isFavorited: true,
-          FavoriteCount: restaurant.FavoriteCount + 1,
-        };
-      });
-    },
-    deleteFavorite(id) {
-      this.restaurants = this.restaurants.map((restaurant) => {
-        if (restaurant.id !== id) {
-          return restaurant;
+    async addFavorite(restaurantId) {
+      try {
+        const response = await usersAPI.addFavorite({ restaurantId });
+        const { data } = response;
+
+        if (data.status !== 'success') {
+          throw new Error(data.message);
         }
 
-        return {
-          ...restaurant,
-          isFavorited: false,
-          FavoriteCount: restaurant.FavoriteCount - 1,
-        };
-      });
+        this.restaurants = this.restaurants.map((restaurant) => {
+          if (restaurant.id !== restaurantId) {
+            return restaurant;
+          }
+          return {
+            ...restaurant,
+            isFavorited: true,
+            FavoriteCount: restaurant.FavoriteCount + 1,
+          };
+        });
+      } catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: '無法將餐廳加入最愛，請稍後再試',
+        });
+      }
+    },
+    async deleteFavorite(restaurantId) {
+      try {
+        const { data } = await usersAPI.deleteFavorite({ restaurantId });
+
+        if (data.status !== 'success') {
+          throw new Error(data.message);
+        }
+
+        this.restaurants = this.restaurants.map((restaurant) => {
+          if (restaurant.id !== restaurantId) {
+            return restaurant;
+          }
+
+          return {
+            ...restaurant,
+            isFavorited: false,
+            FavoriteCount: restaurant.FavoriteCount - 1,
+          };
+        });
+      } catch (error) {
+        Toast.fire({
+          icon: 'error',
+          title: '無法將餐廳刪除最愛，請稍後再試',
+        });
+      }
     },
   },
 };
